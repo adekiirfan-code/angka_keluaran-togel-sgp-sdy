@@ -1,137 +1,259 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LANAYA88 PRO MAX</title>
-<style>
-body{margin:0;font-family:Arial;background:#dcdcdc}
-.wrap{width:1100px;margin:auto;background:#fff;border:2px solid #999}
+import React from "react";
+import {
+  Bell,
+  Bot,
+  CalendarDays,
+  ChevronRight,
+  CircleUserRound,
+  Download,
+  LayoutDashboard,
+  Medal,
+  MessageSquare,
+  Settings,
+  Sparkles,
+  Trophy,
+  Users,
+} from "lucide-react";
 
-.top{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;border-bottom:2px solid #999}
-.logo{font-size:42px;font-weight:900}
-.logo span{color:red}
+const members = [
+  { name: "cha2", target: 11, reached: 4, category: "Sangat Buruk", categoryClass: "bg-red-500/15 text-red-300 border-red-500/30", note: "ikut kelas x kelas siang" },
+  { name: "TOGOKX", target: 12, reached: 0, category: "Belum Mulai", categoryClass: "bg-slate-500/15 text-slate-300 border-slate-500/30", note: "-" },
+  { name: "optimus", target: 8, reached: 0, category: "Belum Mulai", categoryClass: "bg-slate-500/15 text-slate-300 border-slate-500/30", note: "-" },
+  { name: "RINTON", target: 8, reached: 4, category: "Sedang", categoryClass: "bg-amber-500/15 text-amber-300 border-amber-500/30", note: "-" },
+];
 
-.meta{text-align:right;font-size:13px;font-weight:bold;border-left:2px solid #000;padding-left:10px}
-.clock-box{border:2px solid #000;padding:3px 6px;display:inline-block;margin-top:4px}
+const weekly = [
+  { name: "cha2", value: 62, rank: 1 },
+  { name: "RINTON", value: 46, rank: 2 },
+  { name: "TOGOKX", value: 44, rank: 3 },
+  { name: "optimus", value: 36, rank: 4 },
+];
 
-.title{text-align:center;font-weight:900;padding:8px;border-bottom:2px solid #999}
-.bar{display:flex;justify-content:space-between;padding:6px 15px;border-bottom:2px solid #999;font-weight:900}
+const monthly = [
+  { name: "cha2", value: 28, rank: 1 },
+  { name: "RINTON", value: 22, rank: 2 },
+  { name: "TOGOKX", value: 21, rank: 3 },
+  { name: "optimus", value: 17, rank: 4 },
+];
 
-.content{display:flex}
+function ProgressBar({ value, accent = "cyan" }: { value: number; accent?: "cyan" | "amber" | "rose" }) {
+  const color =
+    accent === "amber"
+      ? "from-amber-400 to-orange-500"
+      : accent === "rose"
+      ? "from-rose-400 to-red-500"
+      : "from-cyan-400 to-blue-500";
 
-table{width:70%;border-collapse:collapse}
-th,td{border:1px solid #000;padding:14px;text-align:center}
-th{background:#eee}
-
-/* BARIS TERBARU HIGHLIGHT */
-.latest-row{
-background:#ffecec;
-animation:fadeHighlight 2s infinite alternate;
+  return (
+    <div className="flex items-center gap-3">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-700/70">
+        <div
+          className={`h-full rounded-full bg-gradient-to-r ${color} transition-all duration-500`}
+          style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+        />
+      </div>
+      <span className="w-10 text-right text-xs font-semibold text-cyan-300">{value}%</span>
+    </div>
+  );
 }
-@keyframes fadeHighlight{
-0%{background:#ffecec}
-100%{background:#fff}
+
+function RankRow({ rank, name, value }: { rank: number; name: string; value: number }) {
+  const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
+  const accent = rank === 1 ? "amber" : rank === 2 ? "cyan" : rank === 3 ? "rose" : "cyan";
+  return (
+    <div className="grid grid-cols-[56px_1fr_120px] items-center gap-3 border-b border-slate-700/50 px-1 py-3 last:border-b-0">
+      <div className="text-sm font-semibold text-slate-200">{medal}</div>
+      <div className="text-sm text-slate-100">{name}</div>
+      <ProgressBar value={value} accent={accent as any} />
+    </div>
+  );
 }
 
-/* ANGKA TERBARU */
-.latest{
-animation:blinkColor 1s infinite;
-font-weight:900;
+export default function App() {
+  return (
+    <div className="min-h-screen bg-[#07111f] text-slate-100">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.10),transparent_20%)]" />
+      <div className="relative mx-auto max-w-[1600px] p-4 md:p-6 lg:p-8">
+        <header className="rounded-2xl border border-cyan-400/20 bg-slate-950/70 px-5 py-4 shadow-2xl shadow-cyan-950/10 backdrop-blur">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="grid h-11 w-11 place-items-center rounded-2xl bg-cyan-500/15 text-cyan-300 ring-1 ring-cyan-400/30">
+                  <Bot className="h-5 w-5" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-black tracking-wide text-cyan-300">Football Bot Dashboard</h1>
+                  <p className="mt-1 text-xs text-slate-400">Dashboard bot tracking posting, performa member, dan aktivitas harian</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="rounded-full border border-violet-500/40 bg-violet-500/15 px-3 py-1 font-semibold text-violet-200">Administrator</span>
+              <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-slate-300">ADMIN</span>
+              <button className="rounded-xl bg-slate-800 px-3 py-2 text-slate-200 transition hover:bg-slate-700"><MessageSquare className="mr-2 inline h-4 w-4" />Chat</button>
+              <button className="rounded-xl bg-slate-800 px-3 py-2 text-slate-200 transition hover:bg-slate-700"><Bell className="mr-2 inline h-4 w-4" />Notifikasi</button>
+              <button className="rounded-xl bg-rose-600/20 px-3 py-2 text-rose-200 ring-1 ring-rose-500/30 transition hover:bg-rose-600/30">Logout</button>
+            </div>
+          </div>
+
+          <nav className="mt-5 flex flex-wrap gap-2 border-t border-cyan-400/10 pt-4">
+            {[
+              [LayoutDashboard, "Overview"],
+              [Sparkles, "Analytics"],
+              [CalendarDays, "Data Mingguan"],
+              [Trophy, "Tracking Postingan"],
+              [Bot, "Jalankan Bot"],
+              [Users, "Grup (39)"],
+              [CircleUserRound, "Kelola User"],
+              [Settings, "Pengaturan"],
+            ].map(([Icon, label]) => (
+              <button
+                key={label}
+                className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                  label === "Tracking Postingan"
+                    ? "bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-400/40"
+                    : "bg-slate-900/80 text-slate-400 ring-1 ring-slate-700 hover:bg-slate-800 hover:text-slate-200"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </button>
+            ))}
+          </nav>
+        </header>
+
+        <section className="mt-6 rounded-2xl border border-violet-500/20 bg-slate-950/60 px-5 py-4 text-sm text-slate-300 shadow-xl backdrop-blur">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="grid h-9 w-9 place-items-center rounded-full bg-amber-500/15 text-amber-300 ring-1 ring-amber-400/20">⏰</div>
+              <div>
+                <span className="text-slate-400">Deadline hari ini:</span>{" "}
+                <strong className="text-amber-300">1 jam 56 menit lagi</strong>
+              </div>
+            </div>
+            <div className="text-xs text-slate-500">(berakhir jam 23:59)</div>
+          </div>
+        </section>
+
+        <main className="mt-6 grid gap-6">
+          <section className="rounded-2xl border border-cyan-400/25 bg-[#07101d]/90 p-5 shadow-2xl shadow-cyan-950/10">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h2 className="text-lg font-extrabold text-amber-300">Progress Target Hari Ini</h2>
+                <p className="mt-2 max-w-3xl text-sm text-slate-400">
+                  Target grup harian per member. Klik nama member untuk lihat riwayat 30 hari. Streak = jumlah hari berturut-turut mencapai target.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <label className="text-slate-400">Tanggal:</label>
+                <input
+                  type="text"
+                  defaultValue="04/23/2026"
+                  className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-slate-100 outline-none ring-0"
+                />
+                <button className="rounded-xl bg-slate-600 px-4 py-2 font-semibold text-slate-100 transition hover:bg-slate-500">HARI INI</button>
+                <button className="rounded-xl bg-emerald-600 px-4 py-2 font-semibold text-white transition hover:bg-emerald-500">
+                  <Download className="mr-2 inline h-4 w-4" />EXPORT CSV
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 overflow-x-auto rounded-2xl border border-slate-700/60 bg-slate-950/70">
+              <table className="min-w-full text-left text-sm">
+                <thead className="bg-slate-900/80 text-cyan-200">
+                  <tr>
+                    {['#', 'MEMBER', 'TARGET', 'TERCAPAI', 'PROGRESS', 'KATEGORI', 'STREAK', 'CATATAN'].map((h) => (
+                      <th key={h} className="px-4 py-3 font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {members.map((m, i) => {
+                    const pct = Math.round((m.reached / m.target) * 100);
+                    const accent = pct >= 80 ? "cyan" : pct >= 50 ? "amber" : "rose";
+                    return (
+                      <tr key={m.name} className="border-t border-slate-800/80 hover:bg-slate-900/50">
+                        <td className="px-4 py-4 text-slate-400">{i + 1}</td>
+                        <td className="px-4 py-4 font-medium text-cyan-300">{m.name}</td>
+                        <td className="px-4 py-4 text-slate-200">{m.target}</td>
+                        <td className={`px-4 py-4 font-bold ${m.reached > 0 ? 'text-amber-300' : 'text-slate-400'}`}>{m.reached}</td>
+                        <td className="px-4 py-4"><ProgressBar value={pct} accent={accent as any} /></td>
+                        <td className="px-4 py-4"><span className={`rounded-full border px-3 py-1 text-xs font-semibold ${m.categoryClass}`}>{m.category}</span></td>
+                        <td className="px-4 py-4 text-slate-400">-</td>
+                        <td className="px-4 py-4 text-slate-400">{m.note}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-cyan-400/25 bg-[#07101d]/90 p-5 shadow-2xl shadow-cyan-950/10">
+            <div className="mb-4 flex items-center gap-3">
+              <Trophy className="h-5 w-5 text-amber-300" />
+              <h2 className="text-lg font-extrabold text-amber-300">Leaderboard Performa Member</h2>
+            </div>
+            <p className="mb-5 text-sm text-slate-400">Ranking berdasarkan rata-rata persentase pencapaian dalam periode tertentu.</p>
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <div className="mb-3 flex items-center gap-2 text-cyan-200">
+                  <CalendarDays className="h-4 w-4" />
+                  <h3 className="font-semibold">Mingguan (7 hari)</h3>
+                </div>
+                {weekly.map((item) => <RankRow key={item.name} {...item} />)}
+              </div>
+
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <div className="mb-3 flex items-center gap-2 text-violet-200">
+                  <CalendarDays className="h-4 w-4" />
+                  <h3 className="font-semibold">Bulanan (30 hari)</h3>
+                </div>
+                {monthly.map((item) => <RankRow key={item.name} {...item} />)}
+              </div>
+            </div>
+          </section>
+
+          <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="rounded-2xl border border-cyan-400/20 bg-slate-950/80 p-5">
+              <div className="flex items-center gap-2 text-cyan-200">
+                <Users className="h-4 w-4" />
+                <h3 className="font-semibold">Activity Snapshot</h3>
+              </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {[
+                  ["Total Member", "39"],
+                  ["Posting Hari Ini", "18"],
+                  ["Pencapaian", "41%"],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+                    <div className="text-xs text-slate-400">{label}</div>
+                    <div className="mt-2 text-2xl font-black text-slate-100">{value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-cyan-400/20 bg-slate-950/80 p-5">
+              <div className="flex items-center gap-2 text-amber-200">
+                <MessageSquare className="h-4 w-4" />
+                <h3 className="font-semibold">Catatan Cepat</h3>
+              </div>
+              <div className="mt-4 space-y-3 text-sm text-slate-300">
+                <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">• Dashboard ini siap diubah jadi versi produksi.</div>
+                <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">• Bisa dipakai untuk upload ke GitHub dan deploy ke cloud.</div>
+                <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">• Tinggal sambungkan ke API / database kalau mau data dinamis.</div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <footer className="py-8 text-center text-xs text-slate-500">
+          Made for GitHub upload & cloud deployment.
+        </footer>
+      </div>
+    </div>
+  );
 }
-@keyframes blinkColor{
-0%{color:red}
-50%{color:black}
-100%{color:red}
-}
-
-.right{width:30%;padding:10px}
-.banner{border:1px dashed #aaa;height:150px;margin-bottom:15px;overflow:hidden}
-.banner img{width:100%;height:100%;object-fit:cover}
-.banner a{display:block;width:100%;height:100%}
-
-.box{border:2px solid red;height:170px;overflow:hidden}
-.box img{width:100%;height:100%;object-fit:cover}
-
-</style>
-</head>
-<body>
-<div class="wrap">
-
-<div class="top">
-<div class="logo"><span>BEAINE</span> LANAYA88</div>
-<div class="meta">
-APRIL - 2026<br>
-<div class="clock-box" id="jam">00:00:00 WIB</div>
-</div>
-</div>
-
-<div class="title">ANGKA TOGEL SINGAPORE POOLS + TOTO</div>
-
-<div class="bar">
-<div>TANGGAL <span id="tgl">--</span></div>
-<div>JAM <span id="jam2">--</span></div>
-</div>
-
-<div class="content">
-
-<table>
-<tr><th>TANGGAL</th><th>HARI</th><th>SGP</th><th>TOTO</th></tr>
-<tr class="latest-row">
-<td>19-04-2026</td>
-<td>MINGGU</td>
-<td class="latest">9815</td>
-<td class="latest">1502</td>
-</tr>
-<tr><td>18-04-2026</td><td>SABTU</td><td>8953</td><td>6032</td></tr>
-<tr><td>16-04-2026</td><td>KAMIS</td><td>9344</td><td>0936</td></tr>
-<tr><td>15-04-2026</td><td>RABU</td><td>3873</td><td>0701</td></tr>
-</table>
-
-<div class="right">
-
-<div class="banner">
-<a href="https://yoursite.com" target="_blank">
-<img src="https://via.placeholder.com/300x150">
-</a>
-</div>
-
-<div class="banner">
-<a href="https://yoursite.com" target="_blank">
-<img src="https://via.placeholder.com/300x150">
-</a>
-</div>
-
-<div class="banner">
-<a href="https://yoursite.com" target="_blank">
-<img src="https://via.placeholder.com/300x150">
-</a>
-</div>
-
-<div class="box">
-<a href="https://yoursite.com" target="_blank">
-<img src="https://via.placeholder.com/300x170">
-</a>
-</div>
-
-</div>
-</div>
-</div>
-
-<script>
-const bulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
-function pad(n){return n.toString().padStart(2,'0')}
-function update(){
-let d=new Date();
-let tgl=`${pad(d.getDate())} - ${bulan[d.getMonth()]} - ${d.getFullYear()}`;
-let jam=`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} WIB`;
-document.getElementById('tgl').innerText=tgl;
-document.getElementById('jam').innerText=jam;
-document.getElementById('jam2').innerText=jam;
-}
-setInterval(update,1000);
-update();
-</script>
-
-</body>
-</html>
