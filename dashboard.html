@@ -1,213 +1,125 @@
-import { useMemo, useState } from "react";
-import { Pencil } from "lucide-react";
-import { Sidebar } from "./components/Sidebar";
-import { EmailList } from "./components/EmailList";
-import { EmailDetail } from "./components/EmailDetail";
-import { AccountsModal } from "./components/AccountsModal";
-import { ComposeModal } from "./components/ComposeModal";
-import { mockAccounts, mockMessages } from "./data/mockData";
-import type { EmailAccount, EmailMessage, FolderKey } from "./types";
+import React, { useState } from "react";
+import { Search, Mail, ChevronLeft, X, Menu } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-export default function App() {
-  const [accounts, setAccounts] = useState<EmailAccount[]>(mockAccounts);
-  const [messages, setMessages] = useState<EmailMessage[]>(mockMessages);
-  const [selectedAccountId, setSelectedAccountId] = useState<string | "all">(
-    "all"
-  );
-  const [selectedFolder, setSelectedFolder] = useState<FolderKey>("inbox");
-  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
-    mockMessages[0]?.id ?? null
-  );
-  const [searchQuery, setSearchQuery] = useState("");
-  const [accountsOpen, setAccountsOpen] = useState(false);
-  const [composeOpen, setComposeOpen] = useState(false);
+const emails = [
+  {
+    from: "sc-noreply@google.com",
+    subject: "Laporan pengguna kualitas Penelusuran dikirim",
+    preview: "Laporan pengguna terkait kualitas Penelusuran telah dikirim...",
+  },
+  {
+    from: "abuse@cloudflare.com",
+    subject: "Report received: (#22500701) Action Required...",
+    preview: "Hi, Please type your reply above this line...",
+  },
+  {
+    from: "no-reply@email.claude.com",
+    subject: "Using Claude for your everyday life (4/5)",
+    preview: "Tackle projects like personal learning...",
+  },
+  {
+    from: "abuse@namecheap.com",
+    subject: "Re: #32960971 Immediate Threat Notice...",
+    preview: "Hi, Thank you for taking the time to contact us...",
+  },
+  {
+    from: "abuse@godaddy.com",
+    subject: "Automatic reply: Official Abuse Report...",
+    preview: "ATTENTION: This email account is not monitored...",
+  },
+  {
+    from: "search-noreply@google.com",
+    subject: "Masukan Google Penelusuran Anda...",
+    preview: "Kami telah mengirimkan masukan Anda...",
+  },
+];
 
-  const filteredMessages = useMemo(() => {
-    return messages
-      .filter((m) => {
-        if (selectedAccountId !== "all" && m.accountId !== selectedAccountId)
-          return false;
-        if (selectedFolder === "starred") {
-          if (!m.isStarred) return false;
-        } else if (m.folder !== selectedFolder) {
-          return false;
-        }
-        if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase();
-          return (
-            m.subject.toLowerCase().includes(q) ||
-            m.preview.toLowerCase().includes(q) ||
-            m.from.name.toLowerCase().includes(q) ||
-            m.from.address.toLowerCase().includes(q) ||
-            m.body.toLowerCase().includes(q)
-          );
-        }
-        return true;
-      })
-      .sort(
-        (a, b) =>
-          new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime()
-      );
-  }, [messages, selectedAccountId, selectedFolder, searchQuery]);
-
-  const selectedMessage =
-    filteredMessages.find((m) => m.id === selectedMessageId) ??
-    messages.find((m) => m.id === selectedMessageId) ??
-    null;
-
-  const selectedAccount =
-    (selectedMessage &&
-      accounts.find((a) => a.id === selectedMessage.accountId)) ||
-    null;
-
-  const totalUnread = messages.filter(
-    (m) => !m.isRead && m.folder === "inbox"
-  ).length;
-
-  function handleSelectMessage(id: string) {
-    setSelectedMessageId(id);
-    setMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, isRead: true } : m))
-    );
-  }
-
-  function handleToggleStar(id: string) {
-    setMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, isStarred: !m.isStarred } : m))
-    );
-  }
-
-  function handleDelete(id: string) {
-    setMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, folder: "trash" } : m))
-    );
-    setSelectedMessageId(null);
-  }
-
-  function handleArchive(id: string) {
-    setMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, folder: "archive" } : m))
-    );
-    setSelectedMessageId(null);
-  }
-
-  function handleAddAccount(
-    acc: Omit<EmailAccount, "id" | "unreadCount" | "connectedAt">
-  ) {
-    setAccounts((prev) => [
-      ...prev,
-      {
-        ...acc,
-        id: `acc-${Date.now()}`,
-        unreadCount: 0,
-        connectedAt: new Date().toISOString(),
-      },
-    ]);
-  }
-
-  function handleRemoveAccount(id: string) {
-    if (!confirm("Hapus akun ini dari dashboard?")) return;
-    setAccounts((prev) => prev.filter((a) => a.id !== id));
-    setMessages((prev) => prev.filter((m) => m.accountId !== id));
-  }
-
-  function handleRefresh() {
-    // Demo: just a no-op. In production, trigger IMAP/Gmail fetch.
-    alert("Demo — di versi asli, tombol ini akan menarik email terbaru dari server.");
-  }
-
-  const listTitle =
-    selectedFolder === "starred"
-      ? "Berbintang"
-      : selectedFolder === "inbox"
-      ? "Kotak Masuk"
-      : selectedFolder === "sent"
-      ? "Terkirim"
-      : selectedFolder === "archive"
-      ? "Arsip"
-      : selectedFolder === "spam"
-      ? "Spam"
-      : "Sampah";
-
-  const listSubtitle =
-    selectedAccountId === "all"
-      ? `Dari ${accounts.length} akun`
-      : accounts.find((a) => a.id === selectedAccountId)?.address ?? "";
+export default function EmailDashboardStructure() {
+  const [selected, setSelected] = useState(0);
 
   return (
-    <div className="h-screen flex">
-      <Sidebar
-        accounts={accounts}
-        selectedAccountId={selectedAccountId}
-        onSelectAccount={(id) => {
-          setSelectedAccountId(id);
-          setSelectedMessageId(null);
-        }}
-        selectedFolder={selectedFolder}
-        onSelectFolder={(f) => {
-          setSelectedFolder(f);
-          setSelectedMessageId(null);
-        }}
-        totalUnread={totalUnread}
-        onAddAccount={() => setAccountsOpen(true)}
-        onOpenSettings={() => setAccountsOpen(true)}
-      />
-
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
-          <div className="text-sm text-gray-500">
-            {selectedAccountId === "all"
-              ? "Menampilkan semua akun"
-              : `Menampilkan: ${
-                  accounts.find((a) => a.id === selectedAccountId)?.displayName
-                }`}
+    <div className="min-h-screen bg-slate-100 text-slate-900">
+      <div className="flex min-h-screen">
+        {/* Sidebar */}
+        <aside className="w-64 border-r bg-white p-4 hidden md:flex flex-col gap-4">
+          <div>
+            <h1 className="text-xl font-semibold">Email Dashboard</h1>
+            <p className="text-sm text-slate-500 mt-1">Keluar</p>
           </div>
-          <button
-            onClick={() => setComposeOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-brand-600 text-white hover:bg-brand-700"
-          >
-            <Pencil size={14} />
-            Tulis Email
-          </button>
-        </header>
 
-        <div className="flex-1 flex min-h-0">
-          <EmailList
-            messages={filteredMessages}
-            accounts={accounts}
-            selectedId={selectedMessageId}
-            onSelect={handleSelectMessage}
-            onToggleStar={handleToggleStar}
-            searchQuery={searchQuery}
-            onSearch={setSearchQuery}
-            onRefresh={handleRefresh}
-            title={listTitle}
-            subtitle={listSubtitle}
-          />
-          <EmailDetail
-            message={selectedMessage}
-            account={selectedAccount}
-            onToggleStar={handleToggleStar}
-            onDelete={handleDelete}
-            onArchive={handleArchive}
-          />
-        </div>
+          <Button className="w-full justify-start gap-2 rounded-xl bg-slate-900 hover:bg-slate-800">
+            <Mail className="h-4 w-4" />
+            Hubungkan Akun Gmail
+          </Button>
+
+          <Card className="rounded-2xl border-slate-200 shadow-sm">
+            <CardContent className="p-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-medium text-sm">cumacumi01@gmail.com</div>
+                  <div className="text-xs text-slate-500">Cuma Oumi01</div>
+                </div>
+                <button className="text-slate-400 hover:text-slate-600">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
+
+        {/* Main */}
+        <main className="flex-1 flex flex-col">
+          {/* Top bar */}
+          <div className="flex items-center gap-3 border-b bg-white p-3">
+            <button className="md:hidden rounded-lg p-2 hover:bg-slate-100">
+              <Menu className="h-5 w-5" />
+            </button>
+            <div className="flex-1 flex items-center gap-2 max-w-xl mx-auto md:mx-0">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-sm outline-none focus:border-slate-400"
+                  placeholder="Cari email..."
+                />
+              </div>
+              <Button className="rounded-xl bg-slate-900 hover:bg-slate-800">Cari</Button>
+            </div>
+            <div className="hidden lg:block rounded-xl bg-amber-100 px-4 py-2 text-sm text-amber-900">
+              Akun cumacumi01@gmail.com berhasil terhubung
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex flex-1 overflow-hidden">
+            {/* Email list */}
+            <section className="w-full lg:w-[420px] border-r bg-white overflow-y-auto">
+              {emails.map((email, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelected(index)}
+                  className={`w-full text-left border-b p-4 transition hover:bg-slate-50 ${
+                    selected === index ? "bg-slate-50" : ""
+                  }`}
+                >
+                  <div className="font-semibold text-sm truncate">{email.from}</div>
+                  <div className="text-sm mt-1 truncate">{email.subject}</div>
+                  <div className="text-xs text-slate-500 mt-1 truncate">{email.preview}</div>
+                </button>
+              ))}
+            </section>
+
+            {/* Reading pane */}
+            <section className="flex-1 bg-slate-50 p-8 hidden lg:flex items-center justify-center text-slate-400">
+              <div className="text-center max-w-sm">
+                <ChevronLeft className="mx-auto h-10 w-10 mb-4 opacity-40" />
+                <p className="text-lg">Pilih email untuk membaca</p>
+              </div>
+            </section>
+          </div>
+        </main>
       </div>
-
-      <AccountsModal
-        open={accountsOpen}
-        onClose={() => setAccountsOpen(false)}
-        accounts={accounts}
-        onAdd={handleAddAccount}
-        onRemove={handleRemoveAccount}
-      />
-      <ComposeModal
-        open={composeOpen}
-        onClose={() => setComposeOpen(false)}
-        accounts={accounts}
-        defaultFromId={
-          selectedAccountId !== "all" ? selectedAccountId : undefined
-        }
-      />
     </div>
   );
+}
