@@ -1,154 +1,213 @@
-Skip to content
-GitLab
-Search GitLab
-/
-Help
-Sign in
-P
-pens_website-work-order
-Project information
-Repository
-Issues0
-Merge requests0
-CI/CD
-Deployments
-Packages and registries
-Monitor
-Analytics
-Wiki
-Snippets
-Eko Yudha Prasetya
-pens_website-work-order
-Repository
-pens_website-work-order
-src
-components
-Sidebar.tsx
-Raihan Ekp's avatar
-sidebar dinamis
-Raihan Ekp authored 1 year ago
-99546060
-Sidebar.tsx
-2.11 KiB
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-"use client";
-import { FileText, Pulse, SignOut } from "@phosphor-icons/react";
-import SidebarItem from "./SidebarItem";
-import Link from "next/link";
-export default function Sidebar() {
+import { useMemo, useState } from "react";
+import { Pencil } from "lucide-react";
+import { Sidebar } from "./components/Sidebar";
+import { EmailList } from "./components/EmailList";
+import { EmailDetail } from "./components/EmailDetail";
+import { AccountsModal } from "./components/AccountsModal";
+import { ComposeModal } from "./components/ComposeModal";
+import { mockAccounts, mockMessages } from "./data/mockData";
+import type { EmailAccount, EmailMessage, FolderKey } from "./types";
+
+export default function App() {
+  const [accounts, setAccounts] = useState<EmailAccount[]>(mockAccounts);
+  const [messages, setMessages] = useState<EmailMessage[]>(mockMessages);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | "all">(
+    "all"
+  );
+  const [selectedFolder, setSelectedFolder] = useState<FolderKey>("inbox");
+  const [selectedMessageId, setSelectedMessageId] = useState<string | null>(
+    mockMessages[0]?.id ?? null
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [accountsOpen, setAccountsOpen] = useState(false);
+  const [composeOpen, setComposeOpen] = useState(false);
+
+  const filteredMessages = useMemo(() => {
+    return messages
+      .filter((m) => {
+        if (selectedAccountId !== "all" && m.accountId !== selectedAccountId)
+          return false;
+        if (selectedFolder === "starred") {
+          if (!m.isStarred) return false;
+        } else if (m.folder !== selectedFolder) {
+          return false;
+        }
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+          return (
+            m.subject.toLowerCase().includes(q) ||
+            m.preview.toLowerCase().includes(q) ||
+            m.from.name.toLowerCase().includes(q) ||
+            m.from.address.toLowerCase().includes(q) ||
+            m.body.toLowerCase().includes(q)
+          );
+        }
+        return true;
+      })
+      .sort(
+        (a, b) =>
+          new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime()
+      );
+  }, [messages, selectedAccountId, selectedFolder, searchQuery]);
+
+  const selectedMessage =
+    filteredMessages.find((m) => m.id === selectedMessageId) ??
+    messages.find((m) => m.id === selectedMessageId) ??
+    null;
+
+  const selectedAccount =
+    (selectedMessage &&
+      accounts.find((a) => a.id === selectedMessage.accountId)) ||
+    null;
+
+  const totalUnread = messages.filter(
+    (m) => !m.isRead && m.folder === "inbox"
+  ).length;
+
+  function handleSelectMessage(id: string) {
+    setSelectedMessageId(id);
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, isRead: true } : m))
+    );
+  }
+
+  function handleToggleStar(id: string) {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, isStarred: !m.isStarred } : m))
+    );
+  }
+
+  function handleDelete(id: string) {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, folder: "trash" } : m))
+    );
+    setSelectedMessageId(null);
+  }
+
+  function handleArchive(id: string) {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, folder: "archive" } : m))
+    );
+    setSelectedMessageId(null);
+  }
+
+  function handleAddAccount(
+    acc: Omit<EmailAccount, "id" | "unreadCount" | "connectedAt">
+  ) {
+    setAccounts((prev) => [
+      ...prev,
+      {
+        ...acc,
+        id: `acc-${Date.now()}`,
+        unreadCount: 0,
+        connectedAt: new Date().toISOString(),
+      },
+    ]);
+  }
+
+  function handleRemoveAccount(id: string) {
+    if (!confirm("Hapus akun ini dari dashboard?")) return;
+    setAccounts((prev) => prev.filter((a) => a.id !== id));
+    setMessages((prev) => prev.filter((m) => m.accountId !== id));
+  }
+
+  function handleRefresh() {
+    // Demo: just a no-op. In production, trigger IMAP/Gmail fetch.
+    alert("Demo — di versi asli, tombol ini akan menarik email terbaru dari server.");
+  }
+
+  const listTitle =
+    selectedFolder === "starred"
+      ? "Berbintang"
+      : selectedFolder === "inbox"
+      ? "Kotak Masuk"
+      : selectedFolder === "sent"
+      ? "Terkirim"
+      : selectedFolder === "archive"
+      ? "Arsip"
+      : selectedFolder === "spam"
+      ? "Spam"
+      : "Sampah";
+
+  const listSubtitle =
+    selectedAccountId === "all"
+      ? `Dari ${accounts.length} akun`
+      : accounts.find((a) => a.id === selectedAccountId)?.address ?? "";
+
   return (
-    <div className="bg-standardWhite text-standardBlack p-4 flex flex-col justify-between border-r-2 border-grey-300 h-full w-full">
-      <div>
-        <div className="flex justify-between items-center mb-4 space-x-3">
-          <h2 className="text-primary-500 font-medium">Menu</h2>
-        </div>
-        <nav className="space-y-4">
-          {/* Dashboard */}
-          <Link
-            href="/dashboard"
-            className="flex items-center space-x-3 font-medium text-primary-900 hover:bg-primary-100 pl-1 py-2 rounded"
+    <div className="h-screen flex">
+      <Sidebar
+        accounts={accounts}
+        selectedAccountId={selectedAccountId}
+        onSelectAccount={(id) => {
+          setSelectedAccountId(id);
+          setSelectedMessageId(null);
+        }}
+        selectedFolder={selectedFolder}
+        onSelectFolder={(f) => {
+          setSelectedFolder(f);
+          setSelectedMessageId(null);
+        }}
+        totalUnread={totalUnread}
+        onAddAccount={() => setAccountsOpen(true)}
+        onOpenSettings={() => setAccountsOpen(true)}
+      />
+
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4">
+          <div className="text-sm text-gray-500">
+            {selectedAccountId === "all"
+              ? "Menampilkan semua akun"
+              : `Menampilkan: ${
+                  accounts.find((a) => a.id === selectedAccountId)?.displayName
+                }`}
+          </div>
+          <button
+            onClick={() => setComposeOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-md bg-brand-600 text-white hover:bg-brand-700"
           >
-            <Pulse size={24} className="text-primary-500" />
-            <span>Dashboard</span>
-          </Link>
-          {/* Master Elemen */}
-          <SidebarItem
-            title="Master Elemen"
-            icon={<FileText size={24} className="text-primary-500" />}
-            subMenu={[
-              {
-                label: "Formulir Baru",
-                href: "/admin/master-elemen/formulir-baru",
-              },
-              { label: "Monitoring", href: "/admin/master-elemen/monitoring" },
-              {
-                label: "Detail Monitoring",
-                href: "/admin/master-elemen/monitoring/detail",
-              },
-            ]}
+            <Pencil size={14} />
+            Tulis Email
+          </button>
+        </header>
+
+        <div className="flex-1 flex min-h-0">
+          <EmailList
+            messages={filteredMessages}
+            accounts={accounts}
+            selectedId={selectedMessageId}
+            onSelect={handleSelectMessage}
+            onToggleStar={handleToggleStar}
+            searchQuery={searchQuery}
+            onSearch={setSearchQuery}
+            onRefresh={handleRefresh}
+            title={listTitle}
+            subtitle={listSubtitle}
           />
-          {/* Contoh Menu Baru dengan Submenu */}
-          <SidebarItem
-            title="Manajemen User"
-            icon={<FileText size={24} className="text-primary-500" />}
-            subMenu={[
-              { label: "User List", href: "/admin/users" },
-              { label: "Roles", href: "/admin/users/roles" },
-              { label: "Permissions", href: "/admin/users/permissions" },
-            ]}
+          <EmailDetail
+            message={selectedMessage}
+            account={selectedAccount}
+            onToggleStar={handleToggleStar}
+            onDelete={handleDelete}
+            onArchive={handleArchive}
           />
-        </nav>
+        </div>
       </div>
-      {/* Logout */}
-      <Link
-        href="/logout"
-        className="flex space-x-3 hover:bg-primary-100 text-primary-900 font-medium pl-1 py-2 rounded"
-      >
-        <SignOut size={24} className="text-danger-500" />
-        <span>Keluar</span>
-      </Link>
+
+      <AccountsModal
+        open={accountsOpen}
+        onClose={() => setAccountsOpen(false)}
+        accounts={accounts}
+        onAdd={handleAddAccount}
+        onRemove={handleRemoveAccount}
+      />
+      <ComposeModal
+        open={composeOpen}
+        onClose={() => setComposeOpen(false)}
+        accounts={accounts}
+        defaultFromId={
+          selectedAccountId !== "all" ? selectedAccountId : undefined
+        }
+      />
     </div>
   );
-}
