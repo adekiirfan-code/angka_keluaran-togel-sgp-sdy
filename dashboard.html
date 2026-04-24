@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="id"><head>
+<html lang="id">
+<head>
   <meta charset="UTF-8">
-  <title>Dashboard - admin</title>
+  <title>Login Dashboard</title>
   <style>
     body {
       font-family: Arial;
@@ -39,22 +40,13 @@
       border-radius: 5px;
       cursor: pointer;
     }
-    #dashboard {
-      display: none;
-      padding: 20px;
-    }
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      background: #081826;
-      padding: 15px;
-    }
   </style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
-<div id="loginPage" class="center" style="display: flex;">
+<div id="loginPage" class="center">
   <div class="box">
     <h2>Login Dashboard</h2>
     <input type="text" id="usernameInput" placeholder="Username">
@@ -64,53 +56,22 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" style="display: none;">
-  <div class="topbar">
-    <div>Halo, <b id="username">admin</b></div>
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <h1>result angka pasaran seluruh dunia</h1>
-  <p>Selamat datang di dashboard.</p>
-</div>
-
 <script>
-  // USER LOGIN (bisa kamu ganti)
-  const USER = "admin";
-  const PASS = "123";
+const USER = "admin";
+const PASS = "123";
 
-  function login() {
-    const user = document.getElementById('usernameInput').value;
-    const pass = document.getElementById('passwordInput').value;
+function login() {
+  const user = document.getElementById('usernameInput').value;
+  const pass = document.getElementById('passwordInput').value;
 
-    if (user === USER && pass === PASS) {
-      sessionStorage.setItem('loggedIn', 'true');
-      sessionStorage.setItem('username', user);
-      showDashboard();
-    } else {
-      document.getElementById('error').textContent = "Username atau password salah!";
-    }
+  if (user === USER && pass === PASS) {
+    localStorage.setItem('username', user);
+    window.location.href = "dashboard.html";
+  } else {
+    document.getElementById('error').textContent = "Username atau password salah!";
   }
-
-  function logout() {
-    sessionStorage.clear();
-    location.reload();
-  }
-
-  function showDashboard() {
-    const user = sessionStorage.getItem('username');
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    document.getElementById('username').textContent = user;
-    document.title = "Dashboard - " + user;
-  }
-
-  // CEK SAAT HALAMAN DIBUKA
-  if (sessionStorage.getItem('loggedIn')) {
-    showDashboard();
-  }
+}
 </script>
 
-
-</body></html>
+</body>
+</html>
