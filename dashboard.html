@@ -1,76 +1,124 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Login Dashboard</title>
-  <style>
-    body {
-      font-family: Arial;
-      background: #0b1d2a;
-      color: white;
-      margin: 0;
-    }
-    .center {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: #132f4c;
-      padding: 30px;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      padding: 10px;
-      width: 100%;
-      border: none;
-      background: #00c3ff;
-      color: black;
-      font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #e10b0b;
+  color: white;
+  margin: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  background: #e10b0b;
+  padding: 15px;
+}
+
+.container {
+  padding: 20px;
+}
+
+.card {
+  background: #0e10b8;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.box {
+  background: #0e10b8;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+button {
+  padding: 8px 12px;
+  border: none;
+  background: #00c3ff;
+  color: black;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginPage" class="center">
-  <div class="box">
-    <h2>Login Dashboard</h2>
-    <input type="text" id="usernameInput" placeholder="Username">
-    <input type="password" id="passwordInput" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <p id="error" style="color:red;"></p>
+<div class="topbar">
+  <div>Halo, <b id="username"></b></div>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+  <h2>RESULT ANGKA TOGEL</h2>
+
+  <div class="card">
+    <h3>Bot Sosial Media</h3>
+
+    <div class="grid">
+      <div class="box">Instagram<br><b id="ig">0</b></div>
+      <div class="box">Twitter<br><b id="tw">0</b></div>
+      <div class="box">Medium<br><b id="md">0</b></div>
+      <div class="box">Pinterest<br><b id="pt">0</b></div>
+    </div>
   </div>
+
+  <div class="card">
+    <h3>Bot Website</h3>
+
+    <div class="grid">
+      <div class="box">Chrome<br><b id="chrome">0</b></div>
+      <div class="box">Website<br><b id="web">0</b></div>
+    </div>
+  </div>
+
+  <button onclick="loadData()">Refresh Data</button>
+
 </div>
 
 <script>
-const USER = "admin";
-const PASS = "123";
+// CEK LOGIN
+const user = localStorage.getItem('username');
 
-function login() {
-  const user = document.getElementById('usernameInput').value;
-  const pass = document.getElementById('passwordInput').value;
-
-  if (user === USER && pass === PASS) {
-    localStorage.setItem('username', user);
-    window.location.href = "dashboard.html";
-  } else {
-    document.getElementById('error').textContent = "Username atau password salah!";
-  }
+if (!user) {
+  window.location.href = "index.html";
 }
+
+// tampilkan username
+document.getElementById('username').textContent = user;
+
+// LOGOUT
+function logout() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+// DATA SEMENTARA (nanti bisa dari database)
+function loadData() {
+  document.getElementById('ig').textContent = Math.floor(Math.random()*200);
+  document.getElementById('tw').textContent = Math.floor(Math.random()*200);
+  document.getElementById('md').textContent = Math.floor(Math.random()*200);
+  document.getElementById('pt').textContent = Math.floor(Math.random()*200);
+  document.getElementById('chrome').textContent = Math.floor(Math.random()*500);
+  document.getElementById('web').textContent = Math.floor(Math.random()*50);
+}
+
+// load awal
+loadData();
 </script>
 
 </body>
