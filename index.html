@@ -1,636 +1,47 @@
-
+                   ynag terbaru
+-------------------------------------------------------------
+<!DOCTYPE html>
 <html lang="id"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Draw Togel — Central Panel</title>
-
-<!-- ============ PWA (install jadi aplikasi) ============ -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ffd166">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Live Draw">
+<title>Dashboard Overview — Central Panel</title>
 <link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
-
-<style>
-  :root {
-    --bg: #0b1020;
-    --bg-2: #0f1530;
-    --sidebar: #121833;
-    --sidebar-hover: #1a2147;
-    --sidebar-active: #2b3470;
-    --card: #161d3a;
-    --card-2: #1c2547;
-    --card-active: #2a2150;
-    --border: #232c52;
-    --border-active: #ffd166;
-    --text: #e6e9f2;
-    --muted: #8089a6;
-    --accent: #ffd166;
-    --accent-2: #ef476f;
-    --ok: #06d6a0;
-    --info: #4cc9f0;
-    --purple: #a78bfa;
-    --live: #ef476f;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  a { color: inherit; text-decoration: none; }
-
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    font-size: 13px;
-  }
-
-  /* ============ SIDEBAR ============ */
-  .sidebar {
-    width: 240px;
-    background: var(--sidebar);
-    border-right: 1px solid var(--border);
-    padding: 18px 0;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-    flex-shrink: 0;
-  }
-  .sidebar::-webkit-scrollbar { width: 6px; }
-  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 18px 18px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 14px;
-    cursor: pointer;
-  }
-  .brand-logo {
-    width: 38px; height: 38px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800;
-    color: #0b1020;
-    font-size: 18px;
-  }
-  .brand-text h1 { font-size: 14px; font-weight: 700; color: var(--accent); }
-  .brand-text p  { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-  .nav-section { padding: 8px 0; }
-  .nav-title {
-    font-size: 10px; color: var(--muted);
-    letter-spacing: 1.2px;
-    padding: 8px 18px;
-    font-weight: 600;
-  }
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 18px;
-    color: #c5cae0;
-    cursor: pointer;
-    font-size: 13px;
-    border-left: 3px solid transparent;
-    transition: 0.15s;
-    user-select: none;
-  }
-  .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
-  .nav-item.active {
-    background: var(--sidebar-active);
-    border-left-color: var(--accent);
-    color: #fff;
-    font-weight: 500;
-  }
-  .nav-item .ico { width: 16px; text-align: center; font-size: 13px; }
-  .nav-item .badge-mini {
-    margin-left: auto;
-    font-size: 9px; padding: 2px 6px;
-    border-radius: 8px;
-    background: var(--ok); color: #0b1020;
-    font-weight: 700;
-  }
-  .nav-item .badge-mini.tutup { background: var(--muted); color: #fff; }
-  .nav-item .badge-mini.soon  { background: var(--accent); color: #0b1020; }
-
-  /* ============ MAIN ============ */
-  .main {
-    flex: 1; min-width: 0;
-    padding: 18px 24px;
-  }
-
-  .topbar {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 18px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-  .page-title { font-size: 18px; font-weight: 700; }
-  .page-title small {
-    color: var(--muted); font-size: 12px; font-weight: 400; margin-left: 8px;
-  }
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-  .clock-mini { color: var(--accent); font-weight: 600;
-    font-variant-numeric: tabular-nums; font-size: 13px;
-  }
-  .user-chip {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--card); padding: 5px 10px 5px 5px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-  .user-avatar {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--info), var(--purple));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
-  }
-  .user-chip span { font-size: 12px; }
-
-  /* ============ STAT CARDS ============ */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 18px;
-  }
-  .stat {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-  }
-  .stat .label {
-    font-size: 10px; color: var(--muted);
-    letter-spacing: 0.8px; text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .stat .val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .stat .sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .stat.s1 .val { color: var(--info); }
-  .stat.s2 .val { color: var(--ok); }
-  .stat.s3 .val { color: var(--purple); }
-  .stat.s4 .val { color: var(--accent); }
-
-  /* ============ PANEL ============ */
-  .panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 16px;
-  }
-  .panel-head {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 12px;
-  }
-  .panel-title {
-    font-size: 13px; font-weight: 600;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .panel-title::before {
-    content: ''; width: 3px; height: 14px;
-    background: var(--accent); border-radius: 2px;
-  }
-  .panel-link {
-    font-size: 11px; color: var(--info); cursor: pointer;
-  }
-
-  /* ============ MARKET GRID (whole card clickable) ============ */
-  .market-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-  }
-  .market-card {
-    position: relative;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 14px 12px;
-    cursor: pointer;
-    transition: 0.18s;
-    display: block;
-  }
-  .market-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-    box-shadow: 0 6px 20px rgba(255,209,102,0.10);
-  }
-  .market-card.active {
-    border-color: var(--border-active);
-    background: var(--card-active);
-    box-shadow: 0 0 0 1px var(--accent), 0 6px 24px rgba(255,209,102,0.18);
-  }
-  .market-card.active::before {
-    content: '';
-    position: absolute; left: 0; top: 14px; bottom: 14px;
-    width: 3px;
-    background: var(--accent);
-    border-radius: 0 2px 2px 0;
-  }
-
-  .badge-corner {
-    position: absolute;
-    top: 10px; right: 10px;
-    font-size: 9px;
-    padding: 2px 7px;
-    border-radius: 8px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-  }
-  .badge-corner.live  { background: var(--live); color: #fff; }
-  .badge-corner.live::before {
-    content: '●';
-    margin-right: 3px;
-    animation: blink 1.2s infinite;
-  }
-  .badge-corner.buka  { background: var(--ok); color: #0b1020; }
-  .badge-corner.tutup { background: var(--muted); color: #fff; }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.3; }
-  }
-
-  .market-name {
-    font-size: 13px; font-weight: 600;
-    margin-bottom: 8px;
-    padding-right: 50px;
-  }
-  .market-num {
-    font-size: 26px; font-weight: 800;
-    letter-spacing: 4px;
-    color: var(--accent);
-    font-variant-numeric: tabular-nums;
-    margin: 4px 0 8px;
-  }
-  .market-foot {
-    font-size: 10px; color: var(--muted);
-    display: flex; justify-content: space-between;
-    border-top: 1px dashed var(--border);
-    padding-top: 8px;
-  }
-
-  /* ============ LIVE PAGE (per pasaran) ============ */
-  .breadcrumb {
-    font-size: 12px; color: var(--muted);
-    margin-bottom: 14px;
-  }
-  .breadcrumb a { color: var(--info); }
-  .breadcrumb a:hover { text-decoration: underline; }
-
-  .hero {
-    background: linear-gradient(135deg, var(--card) 0%, var(--card-2) 100%);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px 32px;
-    margin-bottom: 18px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::after {
-    content: '';
-    position: absolute; right: -60px; top: -60px;
-    width: 220px; height: 220px;
-    background: radial-gradient(circle, rgba(255,209,102,0.18), transparent 70%);
-    border-radius: 50%;
-  }
-  .hero-row {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 24px; position: relative; z-index: 1;
-  }
-  .hero-info h1 {
-    font-size: 28px; font-weight: 800;
-    margin-bottom: 6px;
-  }
-  .hero-info .sub {
-    color: var(--muted); font-size: 12px;
-    margin-bottom: 14px;
-  }
-  .hero-meta {
-    display: flex; gap: 22px; font-size: 12px;
-  }
-  .hero-meta div b { display: block; color: var(--text); font-size: 14px; margin-top: 2px; }
-  .hero-meta div   { color: var(--muted); }
-
-  .hero-result { text-align: right; }
-  .hero-result .nums {
-    font-size: 64px; font-weight: 800;
-    letter-spacing: 12px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-  .hero-result .badge-big {
-    display: inline-block;
-    margin-top: 12px;
-    font-size: 11px; padding: 4px 12px;
-    border-radius: 12px;
-    font-weight: 700; letter-spacing: 0.6px;
-  }
-  .hero-result .badge-big.live { background: var(--live); color: #fff; }
-  .hero-result .badge-big.live::before {
-    content: '●'; margin-right: 4px;
-    animation: blink 1.2s infinite;
-  }
-  .hero-result .badge-big.buka  { background: var(--ok); color: #0b1020; }
-  .hero-result .badge-big.tutup { background: var(--muted); color: #fff; }
-
-  /* ============ BANNER PASARAN (2 kotak foto, otomatis fallback) ============ */
-  .banner-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin: 0 0 18px;
-  }
-  .banner-img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    display: block;
-    transition: 0.18s;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-  }
-  .banner-img:hover {
-    border-color: var(--accent);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(255,209,102,0.20);
-  }
-  @media (max-width: 600px) {
-    .banner-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ============ RESULT LIST (compact, lebih kecil dari banner) ============ */
-  .result-panel {
-    max-width: 520px;
-    margin: 0 auto 16px;
-    padding: 14px 16px;
-  }
-  .result-panel .panel-title { font-size: 12px; }
-  .result-panel table { font-size: 11px; }
-  .result-panel th,
-  .result-panel td { padding: 6px 8px; }
-  .result-panel td.num {
-    font-size: 12px;
-    letter-spacing: 1.5px;
-  }
-  .result-panel .panel-link { font-size: 10px; }
-
-  /* ============ TABLE ============ */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  th, td {
-    padding: 9px 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  th {
-    color: var(--muted);
-    font-weight: 500;
-    font-size: 10px;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-  }
-  td.num {
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--accent);
-  }
-  tr:hover td { background: rgba(255,209,102,0.04); }
-
-  .badge-inline {
-    font-size: 9px;
-    padding: 2px 7px;
-    border-radius: 8px;
-    font-weight: 700;
-    background: var(--ok); color: #0b1020;
-  }
-  .badge-inline.tutup { background: var(--muted); color: #fff; }
-
-  .footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 10px;
-    padding: 14px 0;
-  }
-
-  /* ============ CTA LINK KE SITUS (di stats area) ============ */
-  .cta-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-    color: #0b1020;
-    padding: 14px 20px;
-    border-radius: 12px;
-    margin-bottom: 18px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: 0.18s;
-    box-shadow: 0 4px 18px rgba(255,209,102,0.25);
-  }
-  .cta-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255,209,102,0.40);
-  }
-  .cta-link .cta-text { display: flex; flex-direction: column; }
-  .cta-link .cta-text small {
-    font-size: 11px; font-weight: 500;
-    opacity: 0.75;
-    letter-spacing: 0.4px;
-  }
-  .cta-link .cta-text b { font-size: 15px; letter-spacing: 0.3px; }
-  .cta-link .cta-arrow {
-    background: rgba(11,16,32,0.18);
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 800;
-  }
-
-  /* ============ TOMBOL INSTALL ============ */
-  .install-btn {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    background: var(--info);
-    color: #0b1020;
-    border: none;
-    padding: 7px 14px;
-    border-radius: 18px;
-    font-weight: 700;
-    font-size: 12px;
-    cursor: pointer;
-    transition: 0.15s;
-  }
-  .install-btn:hover { background: #6dd5fa; transform: translateY(-1px); }
-  .install-btn.show { display: inline-flex; }
-
-  /* ============ SIDEBAR LINK CTA (bawah) ============ */
-  .sidebar-cta {
-    margin: 12px 14px 18px;
-    padding: 12px 14px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #0b1020;
-    border-radius: 10px;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-    font-weight: 700;
-    font-size: 12px;
-    transition: 0.15s;
-  }
-  .sidebar-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(255,209,102,0.30);
-  }
-  .sidebar-cta small {
-    display: block;
-    font-size: 9px;
-    font-weight: 500;
-    opacity: 0.7;
-    margin-bottom: 2px;
-    letter-spacing: 0.6px;
-  }
-
-  /* ============ ADMIN PANEL ============ */
-  .admin-form {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 0.8fr 0.6fr;
-    gap: 8px;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .admin-form input, .admin-form select {
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 9px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-family: inherit;
-    width: 100%;
-  }
-  .admin-form input:focus, .admin-form select:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-  .admin-form button {
-    background: var(--ok);
-    color: #0b1020;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 11px;
-    cursor: pointer;
-  }
-  .admin-form button:hover { background: #2af0b5; }
-  .admin-header {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 0.8fr 0.6fr;
-    gap: 8px;
-    padding: 8px 0;
-    color: var(--muted);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 600;
-  }
-  .admin-actions {
-    display: flex; gap: 8px; margin-top: 14px;
-  }
-  .btn-primary, .btn-secondary {
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 12px; font-weight: 600;
-    border: none; cursor: pointer;
-    transition: 0.15s;
-  }
-  .btn-primary  { background: var(--accent); color: #0b1020; }
-  .btn-secondary { background: var(--card-2); color: var(--text); border: 1px solid var(--border); }
-  .btn-primary:hover  { transform: translateY(-1px); }
-  .btn-secondary:hover { background: var(--sidebar-hover); }
-
-  .login-box {
-    max-width: 360px;
-    margin: 60px auto;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 28px;
-    text-align: center;
-  }
-  .login-box h2 { margin-bottom: 6px; font-size: 18px; }
-  .login-box p  { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
-  .login-box input {
-    width: 100%;
-    background: var(--bg-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 12px;
-  }
-  .login-box button {
-    width: 100%;
-    background: var(--accent);
-    color: #0b1020;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-  }
-  .login-box .err {
-    color: var(--accent-2);
-    font-size: 11px;
-    margin-bottom: 10px;
-    min-height: 14px;
-  }
-
-  /* ============ RESPONSIVE ============ */
-  @media (max-width: 1100px) {
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    .market-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 720px) {
-    .sidebar { display: none; }
-    .hero-row { flex-direction: column; align-items: flex-start; }
-    .hero-result { text-align: left; }
-    .hero-result .nums { font-size: 44px; letter-spacing: 6px; }
-  }
-</style>
+<link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="" data-page="dashboard">
+
+  <!-- ============ GATE LOGIN ============ -->
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <div class="gate-logo">
+        <div class="lg-icon">T</div>
+        <div>
+          <h2>Central Panel</h2>
+          <p>Live Draw Togel</p>
+        </div>
+      </div>
+      <h3>Masuk ke Dashboard</h3>
+      <div class="gate-sub">Masukkan ID &amp; password untuk mengakses panel.</div>
+      <div class="gate-field">
+        <label for="gate-id">USER ID</label>
+        <input type="text" id="gate-id" placeholder="contoh: admin" autocomplete="username">
+      </div>
+      <div class="gate-field">
+        <label for="gate-pass">PASSWORD</label>
+        <input type="password" id="gate-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="gate-err" id="gate-err"></div>
+      <button class="gate-btn" id="gate-btn">MASUK</button>
+      <div class="gate-foot">
+        Akses panel hanya untuk admin yang berwenang.<br>
+        Lupa password? Hubungi pengelola sistem.
+      </div>
+    </div>
+  </div>
 
   <!-- ============ SIDEBAR ============ -->
   <aside class="sidebar">
-    <a href="#/" class="brand">
+    <a href="index.html" class="brand">
       <div class="brand-logo">T</div>
       <div class="brand-text">
         <h1>Central Panel</h1>
@@ -640,376 +51,1609 @@
 
     <div class="nav-section">
       <div class="nav-title">CORE</div>
-      <a href="#/" class="nav-item" data-route="/">
-        <span class="ico">▦</span> Dashboard Overview
+      <a href="index.html" class="nav-item active" data-page="dashboard">
+        <span class="ico">▦</span> Daftar Pasaran
       </a>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-title">PASARAN TOGEL</div>
-      <div id="nav-pasaran">
-      <a href="#/live/magnum-cambodia" class="nav-item" data-route="/live/magnum-cambodia">
-        <span class="ico">●</span>
-        MAGNUM CAMBODIA
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/totomacau" class="nav-item" data-route="/live/totomacau">
-        <span class="ico">●</span>
-        TOTOMACAU
-        <span class="badge-mini ">
-          LIVE
-        </span>
-      </a>
-    
-      <a href="#/live/sydneypools" class="nav-item" data-route="/live/sydneypools">
-        <span class="ico">●</span>
-        SYDNEYPOOLS
-        <span class="badge-mini tutup">
-          TUTUP
-        </span>
-      </a>
-    
-      <a href="#/live/china" class="nav-item" data-route="/live/china">
-        <span class="ico">●</span>
-        CHINA
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/singapore" class="nav-item" data-route="/live/singapore">
-        <span class="ico">●</span>
-        SINGAPORE
-        <span class="badge-mini ">
-          LIVE
-        </span>
-      </a>
-    
-      <a href="#/live/hongkong" class="nav-item active" data-route="/live/hongkong">
-        <span class="ico">●</span>
-        HONGKONG
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/macau-4d" class="nav-item" data-route="/live/macau-4d">
-        <span class="ico">●</span>
-        MACAU 4D
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/kingkong-pools" class="nav-item" data-route="/live/kingkong-pools">
-        <span class="ico">●</span>
-        KINGKONG POOLS
-        <span class="badge-mini tutup">
-          TUTUP
-        </span>
-      </a>
-    
-      <a href="#/live/damacai" class="nav-item" data-route="/live/damacai">
-        <span class="ico">●</span>
-        DAMACAI
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/grand-dragon-4d" class="nav-item" data-route="/live/grand-dragon-4d">
-        <span class="ico">●</span>
-        GRAND DRAGON 4D
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/pcso" class="nav-item" data-route="/live/pcso">
-        <span class="ico">●</span>
-        PCSO
-        <span class="badge-mini tutup">
-          TUTUP
-        </span>
-      </a>
-    
-      <a href="#/live/saigon" class="nav-item" data-route="/live/saigon">
-        <span class="ico">●</span>
-        SAIGON
-        <span class="badge-mini ">
-          LIVE
-        </span>
-      </a>
-    
-      <a href="#/live/jakarta-pools" class="nav-item" data-route="/live/jakarta-pools">
-        <span class="ico">●</span>
-        JAKARTA POOLS
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/toto-wuhan" class="nav-item" data-route="/live/toto-wuhan">
-        <span class="ico">●</span>
-        TOTO WUHAN 10:00
-        <span class="badge-mini tutup">
-          TUTUP
-        </span>
-      </a>
-    
-      <a href="#/live/shenzhen-lottery" class="nav-item" data-route="/live/shenzhen-lottery">
-        <span class="ico">●</span>
-        SHENZHEN LOTTERY
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/manila-pools" class="nav-item" data-route="/live/manila-pools">
-        <span class="ico">●</span>
-        MANILA POOLS
-        <span class="badge-mini tutup">
-          TUTUP
-        </span>
-      </a>
-    
-      <a href="#/live/chiangmai-lottery" class="nav-item" data-route="/live/chiangmai-lottery">
-        <span class="ico">●</span>
-        CHIANGMAI LOTTERY
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/shanghai-pools" class="nav-item" data-route="/live/shanghai-pools">
-        <span class="ico">●</span>
-        SHANGHAI POOLS
-        <span class="badge-mini ">
-          BUKA
-        </span>
-      </a>
-    
-      <a href="#/live/pattaya-lottery" class="nav-item" data-route="/live/pattaya-lottery">
-        <span class="ico">●</span>
-        PATTAYA LOTTERY
-        <span class="badge-mini tutup">
-          TUTUP
-        </span>
-      </a>
-    </div>
     </div>
 
     <div class="nav-section">
       <div class="nav-title">TOOLS</div>
-      <a href="#/history" class="nav-item" data-route="/history">
+      <a href="prediksi.html" class="nav-item" data-page="prediksi">
+        <span class="ico">📈</span> Prediksi
+      </a>
+      <a href="buku-mimpi.html" class="nav-item" data-page="buku-mimpi">
+        <span class="ico">📖</span> Buku Mimpi
+      </a>
+      <a href="riwayat.html" class="nav-item" data-page="riwayat">
         <span class="ico">⏱</span> Riwayat Lengkap
       </a>
-      <a href="#/history" class="nav-item">
+      <a href="riwayat.html" class="nav-item">
         <span class="ico">▤</span> Result
       </a>
-      <div class="nav-item" id="sw-status-item" title="Status Service Worker (PWA)">
-        <span class="ico">⚡</span> Service Worker
-        <span class="badge-mini" id="sw-status-badge" style="background: var(--ok); color: rgb(11, 16, 32);">AKTIF</span>
-      </div>
     </div>
 
     <div class="nav-section">
       <div class="nav-title">OPERATIONS</div>
-      <a href="#/admin" class="nav-item" data-route="/admin">
-        <span class="ico">🔒</span> Admin Panel
-      </a>
-      <div class="nav-item">
-        <span class="ico">↻</span> Auto Refresh
-      </div>
-      <div class="nav-item">
+      <a href="pengaturan.html" class="nav-item" data-page="pengaturan">
         <span class="ico">⚙</span> Pengaturan
-      </div>
+      </a>
     </div>
 
-    <!-- ============ CTA LINK SITUS DI SIDEBAR BAWAH ============ -->
     <a href="https://situsanda.com" target="_blank" rel="noopener" class="sidebar-cta" id="sidebar-cta">
-      <small>KUNJUNGI SITUS</small>
+      <small>BANNER DAFTAR</small>
       Daftar &amp; Main Sekarang →
     </a>
   </aside>
 
   <!-- ============ MAIN ============ -->
   <main class="main">
-
-    <!-- Topbar -->
     <div class="topbar">
-      <div class="page-title">
-        <span id="title-text">Live Result — HONGKONG</span>
-        <small id="title-sub">— jadwal buka jam 23:00</small>
+      <a href="index.html" class="topbar-home">Home</a>
+      <div class="topbar-title">
+        Result Pasaran Terlengkap
+        <small id="title-sub">— ringkasan live draw real-time</small>
       </div>
       <div class="topbar-right">
-        <button class="install-btn" id="install-btn" title="Install ke HP / Desktop">
-          ⬇ Install App
-        </button>
-        <div class="clock-mini" id="clock-mini">19:22:21</div>
-        <div class="user-chip">
-          <div class="user-avatar">AD</div>
-          <span>Administrator</span>
-        </div>
+        <span class="topbar-clock" id="clock-mini">04:07 WIB</span>
+        <button class="topbar-logout" id="topbar-logout" title="Keluar dari panel">Keluar</button>
       </div>
     </div>
 
-    <!-- Konten halaman dirender JS -->
     <div id="page">
-      <div class="breadcrumb">
-        <a href="#/">Dashboard</a> &nbsp;›&nbsp; Pasaran &nbsp;›&nbsp; <b style="color:var(--text)">HONGKONG</b>
-      </div>
+    
+    <div class="ticker-wrap">
+      <div class="ticker-track">
+    <span class="ticker-item c1">
+      <span class="nm">MAGNUM CAMBODIA</span>
+      <span class="arr">›</span>
+      <span class="nu">1234</span>
+    </span>
+  
+    <span class="ticker-item c2">
+      <span class="nm">TOTOMACAU</span>
+      <span class="arr">›</span>
+      <span class="nu">5678</span>
+    </span>
+  
+    <span class="ticker-item c3">
+      <span class="nm">SYDNEYPOOLS</span>
+      <span class="arr">›</span>
+      <span class="nu">9012</span>
+    </span>
+  
+    <span class="ticker-item c4">
+      <span class="nm">CHINA</span>
+      <span class="arr">›</span>
+      <span class="nu">3456</span>
+    </span>
+  
+    <span class="ticker-item c5">
+      <span class="nm">SINGAPORE</span>
+      <span class="arr">›</span>
+      <span class="nu">7890</span>
+    </span>
+  
+    <span class="ticker-item c6">
+      <span class="nm">HONGKONG</span>
+      <span class="arr">›</span>
+      <span class="nu">2345</span>
+    </span>
+  
+    <span class="ticker-item c1">
+      <span class="nm">MACAU 4D</span>
+      <span class="arr">›</span>
+      <span class="nu">6789</span>
+    </span>
+  
+    <span class="ticker-item c2">
+      <span class="nm">KINGKONG POOLS</span>
+      <span class="arr">›</span>
+      <span class="nu">1023</span>
+    </span>
+  
+    <span class="ticker-item c1">
+      <span class="nm">MAGNUM CAMBODIA</span>
+      <span class="arr">›</span>
+      <span class="nu">1234</span>
+    </span>
+  
+    <span class="ticker-item c2">
+      <span class="nm">TOTOMACAU</span>
+      <span class="arr">›</span>
+      <span class="nu">5678</span>
+    </span>
+  
+    <span class="ticker-item c3">
+      <span class="nm">SYDNEYPOOLS</span>
+      <span class="arr">›</span>
+      <span class="nu">9012</span>
+    </span>
+  
+    <span class="ticker-item c4">
+      <span class="nm">CHINA</span>
+      <span class="arr">›</span>
+      <span class="nu">3456</span>
+    </span>
+  
+    <span class="ticker-item c5">
+      <span class="nm">SINGAPORE</span>
+      <span class="arr">›</span>
+      <span class="nu">7890</span>
+    </span>
+  
+    <span class="ticker-item c6">
+      <span class="nm">HONGKONG</span>
+      <span class="arr">›</span>
+      <span class="nu">2345</span>
+    </span>
+  
+    <span class="ticker-item c1">
+      <span class="nm">MACAU 4D</span>
+      <span class="arr">›</span>
+      <span class="nu">6789</span>
+    </span>
+  
+    <span class="ticker-item c2">
+      <span class="nm">KINGKONG POOLS</span>
+      <span class="arr">›</span>
+      <span class="nu">1023</span>
+    </span>
+  </div>
+    </div>
+  
 
-      <div class="hero">
-        <div class="hero-row">
-          <div class="hero-info">
-            <h1>HONGKONG</h1>
-            <div class="sub">Live result periode terbaru</div>
-            <div class="hero-meta">
-              <div>Tanggal<b>30-04-2026</b></div>
-              <div>Periode<b>#0006</b></div>
-              <div>Jadwal Buka<b>23:00 WIB</b></div>
-            </div>
-          </div>
-          <div class="hero-result">
-            <div class="nums">2345</div>
-            <div class="badge-big buka">BUKA</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="banner-grid">
-        <img src="images/HONGKONG/banner-1.jpg" alt="HONGKONG Banner 1" class="banner-img" onerror="bannerFallback(this, 'HONGKONG', 1)">
-        <img src="https://placehold.co/700x700/2a2150/ef476f?text=HONGKONG%0ABANNER%202" alt="HONGKONG Banner 2" class="banner-img" onerror="bannerFallback(this, 'HONGKONG', 2)">
-      </div>
-
-      <div class="panel result-panel" id="result-panel-anchor">
+    <div class="dash-split">
+      <div class="panel" style="margin-bottom:0">
         <div class="panel-head">
-          <div class="panel-title">Result HONGKONG — 7 hari terakhir</div>
-          <div class="panel-link">Export →</div>
+          <div class="panel-title">Pasaran Pilihan</div>
+          <a href="riwayat.html" class="panel-link">Lihat semua →</a>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Tanggal</th>
-              <th>Periode</th>
-              <th>Result 4D</th>
-              <th>2D</th>
-              <th>3D</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-              <tr>
-                <td>30-04-2026</td>
-                <td>#0006</td>
-                <td class="num">2345</td>
-                <td class="num">45</td>
-                <td class="num">345</td>
-              </tr>
-            
-              <tr>
-                <td>29-04-2026</td>
-                <td>#0005</td>
-                <td class="num">7775</td>
-                <td class="num">75</td>
-                <td class="num">775</td>
-              </tr>
-            
-              <tr>
-                <td>28-04-2026</td>
-                <td>#0004</td>
-                <td class="num">7075</td>
-                <td class="num">75</td>
-                <td class="num">075</td>
-              </tr>
-            
-              <tr>
-                <td>27-04-2026</td>
-                <td>#0003</td>
-                <td class="num">6235</td>
-                <td class="num">35</td>
-                <td class="num">235</td>
-              </tr>
-            
-              <tr>
-                <td>26-04-2026</td>
-                <td>#0002</td>
-                <td class="num">5946</td>
-                <td class="num">46</td>
-                <td class="num">946</td>
-              </tr>
-            
-              <tr>
-                <td>25-04-2026</td>
-                <td>#0001</td>
-                <td class="num">4795</td>
-                <td class="num">95</td>
-                <td class="num">795</td>
-              </tr>
-            
-              <tr>
-                <td>24-04-2026</td>
-                <td>#0000</td>
-                <td class="num">7452</td>
-                <td class="num">52</td>
-                <td class="num">452</td>
-              </tr>
-            
-          </tbody>
-        </table>
+        <div class="featured-list">
+          
+    <a href="result.html?code=magnum-cambodia" class="featured-card">
+      <div>
+        <div class="fc-name">MAGNUM CAMBODIA</div>
+        <div class="fc-jam">Pasaran MAGNUM CAMBODIA — jam 11:55 WIB</div>
+      </div>
+      <div class="fc-arrow">→</div>
+    </a>
+  
+    <a href="result.html?code=totomacau" class="featured-card">
+      <div>
+        <div class="fc-name">TOTOMACAU</div>
+        <div class="fc-jam">Pasaran TOTOMACAU — jam 22:00 WIB</div>
+      </div>
+      <div class="fc-arrow">→</div>
+    </a>
+  
+    <a href="result.html?code=sydneypools" class="featured-card">
+      <div>
+        <div class="fc-name">SYDNEYPOOLS</div>
+        <div class="fc-jam">Pasaran SYDNEYPOOLS — jam 13:50 WIB</div>
+      </div>
+      <div class="fc-arrow">→</div>
+    </a>
+  
+    <a href="result.html?code=china" class="featured-card">
+      <div>
+        <div class="fc-name">CHINA</div>
+        <div class="fc-jam">Pasaran CHINA — jam 16:00 WIB</div>
+      </div>
+      <div class="fc-arrow">→</div>
+    </a>
+  
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:0">
+        <div class="panel-head">
+          <div class="panel-title">Banner &amp; Promo</div>
+        </div>
+        <div class="banner-grid">
+          
+    <a href="https://situsanda.com/daftar" target="_blank" rel="noopener" class="banner-box">
+      <img src="assets/images/banner/banner-1.jpg" alt="BANNER 1" onerror="this.style.display='none';" style="display: none;">
+      <span class="bn-tag">BANNER 1</span>
+    </a>
+  
+    <a href="https://situsanda.com/login" target="_blank" rel="noopener" class="banner-box">
+      <img src="assets/images/banner/banner-2.jpg" alt="BANNER 2" onerror="this.style.display='none';" style="display: none;">
+      <span class="bn-tag">BANNER 2</span>
+    </a>
+  
+    <a href="https://situsanda.com" target="_blank" rel="noopener" class="banner-box">
+      <img src="assets/images/banner/banner-3.jpg" alt="BANNER 3" onerror="this.style.display='none';" style="display: none;">
+      <span class="bn-tag">BANNER 3</span>
+    </a>
+  
+    <a href="https://situsanda.com" target="_blank" rel="noopener" class="banner-box">
+      <img src="assets/images/banner/banner-4.jpg" alt="BANNER 4" onerror="this.style.display='none';" style="display: none;">
+      <span class="bn-tag">BANNER 4</span>
+    </a>
+  
+        </div>
       </div>
     </div>
+
+    
+    <div class="cta-grid">
+      <a href="prediksi.html" class="cta-link">
+        <div class="cta-text"><small>BOCORAN ANGKA</small><b>Prediksi</b></div>
+        <div class="cta-arrow">→</div>
+      </a>
+      <a href="buku-mimpi.html" class="cta-link">
+        <div class="cta-text"><small>TAFSIR MIMPI</small><b>Buku Mimpi</b></div>
+        <div class="cta-arrow">→</div>
+      </a>
+      <a href="https://situsanda.com/daftar" target="_blank" rel="noopener" class="cta-link">
+        <div class="cta-text"><small>KUNJUNGI SITUS RESMI KAMI</small><b>SEGERA DAFTAR</b></div>
+        <div class="cta-arrow">→</div>
+      </a>
+      <a href="https://situsanda.com/login" target="_blank" rel="noopener" class="cta-link">
+        <div class="cta-text"><small>KUNJUNGI SITUS RESMI KAMI</small><b>Main Sekarang</b></div>
+        <div class="cta-arrow">→</div>
+      </a>
+    </div>
+  
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Daftar Pasaran (126) — klik untuk lihat live</div>
+        <a href="riwayat.html" class="panel-link">Riwayat lengkap →</a>
+      </div>
+      <div class="market-grid">
+        
+          <a href="result.html?code=magnum-cambodia" class="market-card" data-code="magnum-cambodia">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MAGNUM CAMBODIA</div>
+            <div class="market-num">1234</div>
+            <div class="market-foot">
+              <span>#0001</span>
+              <span>jam 11:55</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=NUSANTARA" class="market-card" data-code="nusantara">
+            <span class="badge-corner live">LIVE</span>
+            <div class="market-name">NUSANTARA</div>
+            <div class="market-num">5678</div>
+            <div class="market-foot">
+              <span>#0002</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=sydneypools" class="market-card" data-code="sydneypools">
+            <span class="badge-corner tutup">TUTUP</span>
+            <div class="market-name">SYDNEYPOOLS</div>
+            <div class="market-num">9012</div>
+            <div class="market-foot">
+              <span>#0003</span>
+              <span>jam 13:50</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=china" class="market-card" data-code="china">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">CHINA</div>
+            <div class="market-num">3456</div>
+            <div class="market-foot">
+              <span>#0004</span>
+              <span>jam 16:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=singapore" class="market-card" data-code="singapore">
+            <span class="badge-corner live">LIVE</span>
+            <div class="market-name">SINGAPORE</div>
+            <div class="market-num">7890</div>
+            <div class="market-foot">
+              <span>#0005</span>
+              <span>jam 17:45</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=hongkong" class="market-card" data-code="hongkong">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">HONGKONG</div>
+            <div class="market-num">2345</div>
+            <div class="market-foot">
+              <span>#0006</span>
+              <span>jam 23:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=macau-4d" class="market-card" data-code="macau-4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MACAU 4D</div>
+            <div class="market-num">6789</div>
+            <div class="market-foot">
+              <span>#0007</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=kingkong-pools" class="market-card" data-code="kingkong-pools">
+            <span class="badge-corner tutup">TUTUP</span>
+            <div class="market-name">KINGKONG POOLS</div>
+            <div class="market-num">1023</div>
+            <div class="market-foot">
+              <span>#0008</span>
+              <span>jam 19:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=damacai" class="market-card" data-code="damacai">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">DAMACAI</div>
+            <div class="market-num">4567</div>
+            <div class="market-foot">
+              <span>#0009</span>
+              <span>jam 19:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=grand-dragon-4d" class="market-card" data-code="grand-dragon-4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">GRAND DRAGON 4D</div>
+            <div class="market-num">8901</div>
+            <div class="market-foot">
+              <span>#0010</span>
+              <span>jam 19:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=pcso" class="market-card" data-code="pcso">
+            <span class="badge-corner tutup">TUTUP</span>
+            <div class="market-name">PCSO</div>
+            <div class="market-num">2456</div>
+            <div class="market-foot">
+              <span>#0011</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=saigon" class="market-card" data-code="saigon">
+            <span class="badge-corner live">LIVE</span>
+            <div class="market-name">SAIGON</div>
+            <div class="market-num">7813</div>
+            <div class="market-foot">
+              <span>#0012</span>
+              <span>jam 18:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=jakarta-pools" class="market-card" data-code="jakarta-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">JAKARTA POOLS</div>
+            <div class="market-num">3692</div>
+            <div class="market-foot">
+              <span>#0013</span>
+              <span>jam 20:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=toto-wuhan" class="market-card" data-code="toto-wuhan">
+            <span class="badge-corner tutup">TUTUP</span>
+            <div class="market-name">TOTO WUHAN 10:00</div>
+            <div class="market-num">5108</div>
+            <div class="market-foot">
+              <span>#0014</span>
+              <span>jam 10:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=shenzhen-lottery" class="market-card" data-code="shenzhen-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SHENZHEN LOTTERY</div>
+            <div class="market-num">8473</div>
+            <div class="market-foot">
+              <span>#0015</span>
+              <span>jam 13:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=manila-pools" class="market-card" data-code="manila-pools">
+            <span class="badge-corner tutup">TUTUP</span>
+            <div class="market-name">MANILA POOLS</div>
+            <div class="market-num">6195</div>
+            <div class="market-foot">
+              <span>#0016</span>
+              <span>jam 15:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=chiangmai-lottery" class="market-card" data-code="chiangmai-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">CHIANGMAI LOTTERY</div>
+            <div class="market-num">4827</div>
+            <div class="market-foot">
+              <span>#0017</span>
+              <span>jam 14:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=shanghai-pools" class="market-card" data-code="shanghai-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SHANGHAI POOLS</div>
+            <div class="market-num">9034</div>
+            <div class="market-foot">
+              <span>#0018</span>
+              <span>jam 12:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=pattaya-lottery" class="market-card" data-code="pattaya-lottery">
+            <span class="badge-corner tutup">TUTUP</span>
+            <div class="market-name">PATTAYA LOTTERY</div>
+            <div class="market-num">1456</div>
+            <div class="market-foot">
+              <span>#0019</span>
+              <span>jam 13:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=sydney-lotto" class="market-card" data-code="sydney-lotto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SYDNEY LOTTO</div>
+            <div class="market-num">6632</div>
+            <div class="market-foot">
+              <span>#0020</span>
+              <span>jam 14:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=singapore-toto" class="market-card" data-code="singapore-toto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SINGAPORE TOTO</div>
+            <div class="market-num">5674</div>
+            <div class="market-foot">
+              <span>#0021</span>
+              <span>jam 17:45</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=hongkong-lotto" class="market-card" data-code="hongkong-lotto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">HONGKONG LOTTO</div>
+            <div class="market-num">0943</div>
+            <div class="market-foot">
+              <span>#0022</span>
+              <span>jam 23:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=hongkong-pools-day" class="market-card" data-code="hongkong-pools-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">HONGKONG POOLS DAY+</div>
+            <div class="market-num">5600</div>
+            <div class="market-foot">
+              <span>#0023</span>
+              <span>jam 11:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=totomacau-13:00" class="market-card" data-code="totomacau-13:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOTOMACAU 13:00 WIB</div>
+            <div class="market-num">0632</div>
+            <div class="market-foot">
+              <span>#0024</span>
+              <span>jam 13:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=totomacau-16:00" class="market-card" data-code="totomacau-16:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOTOMACAU 16:00 WIB</div>
+            <div class="market-num">4558</div>
+            <div class="market-foot">
+              <span>#0025</span>
+              <span>jam 16:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=totomacau-19:00" class="market-card" data-code="totomacau-19:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOTOMACAU 19:00 WIB</div>
+            <div class="market-num">4547</div>
+            <div class="market-foot">
+              <span>#0026</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=totomacau-2200" class="market-card" data-code="totomacau-22:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOTOMACAU 22:00 WIB</div>
+            <div class="market-num">7679</div>
+            <div class="market-foot">
+              <span>#0027</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=totomacau-00:01" class="market-card" data-code="totomacau-00:01">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOTOMACAU 00:01 WIB</div>
+            <div class="market-num">7643</div>
+            <div class="market-foot">
+              <span>#0028</span>
+              <span>jam 00:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=totomacau-23:00" class="market-card" data-code="totomacau-23:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOTOMACAU 23:00 WIB</div>
+            <div class="market-num">6444</div>
+            <div class="market-foot">
+              <span>#0029</span>
+              <span>jam 23:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=nine-lotto" class="market-card" data-code="nine-lotto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NINE LOTTO</div>
+            <div class="market-num">3568</div>
+            <div class="market-foot">
+              <span>#0030</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=bangkok-09:30" class="market-card" data-code="bangkok-09:30">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BANGKOK 09:30</div>
+            <div class="market-num">6465</div>
+            <div class="market-foot">
+              <span>#0031</span>
+              <span>jam 09:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=beijing-pools" class="market-card" data-code="beijing-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BEIJING POOLS</div>
+            <div class="market-num">0972</div>
+            <div class="market-foot">
+              <span>#0032</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=ankarapools" class="market-card" data-code="ankarapools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ANKARAPOOLS</div>
+            <div class="market-num">3963</div>
+            <div class="market-foot">
+              <span>#0033</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=magnum4d" class="market-card" data-code="magnum4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MAGNUM4D</div>
+            <div class="market-num">6721</div>
+            <div class="market-foot">
+              <span>#0034</span>
+              <span>jam 19:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=shanghai-pools-11:00" class="market-card" data-code="shanghai-pools-11:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SHANGHAI POOLS 11:00</div>
+            <div class="market-num">5632</div>
+            <div class="market-foot">
+              <span>#0035</span>
+              <span>jam 11:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=shanghai-pools-1500" class="market-card" data-code="shanghai-pools-1500">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SHANGHAI POOLS 15:00</div>
+            <div class="market-num">6297</div>
+            <div class="market-foot">
+              <span>#0036</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=shanghai-pools-2300" class="market-card" data-code="shanghai-pools-23:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SHANGHAI POOLS 23:00</div>
+            <div class="market-num">8329</div>
+            <div class="market-foot">
+              <span>#0037</span>
+              <span>jam 23:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=turkey" class="market-card" data-code="turkey">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TURKEY</div>
+            <div class="market-num">6032</div>
+            <div class="market-foot">
+              <span>#0038</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=oslo" class="market-card" data-code="oslo">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">OSLO</div>
+            <div class="market-num">9776</div>
+            <div class="market-foot">
+              <span>#0039</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=bhurma" class="market-card" data-code="bhurma">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BHURMA</div>
+            <div class="market-num">7248</div>
+            <div class="market-foot">
+              <span>#0040</span>
+              <span>jam 14:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=poipet" class="market-card" data-code="poipet">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">POIPET</div>
+            <div class="market-num">8760</div>
+            <div class="market-foot">
+              <span>#0041</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=nepal-pools" class="market-card" data-code="nepal-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NEPAL POOLS</div>
+            <div class="market-num">8754</div>
+            <div class="market-foot">
+              <span>#0042</span>
+              <span>jam 16:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=seoul-lottery" class="market-card" data-code="seoul-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SEOUL LOTTERY+</div>
+            <div class="market-num">6760</div>
+            <div class="market-foot">
+              <span>#0043</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=darwin-4d" class="market-card" data-code="darwin-4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">DARWIN 4D</div>
+            <div class="market-num">9832</div>
+            <div class="market-foot">
+              <span>#0044</span>
+              <span>jam 13:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=mongolia" class="market-card" data-code="mongolia">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MONGOLIA</div>
+            <div class="market-num">6530</div>
+            <div class="market-foot">
+              <span>#0045</span>
+              <span>jam 14:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=paris-lottery" class="market-card" data-code="paris-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">PARIS LOTTERY+</div>
+            <div class="market-num">9645</div>
+            <div class="market-foot">
+              <span>#0046</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=xiamen-lottery" class="market-card" data-code="xiamen-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">XIAMEN LOTTERY</div>
+            <div class="market-num">6543</div>
+            <div class="market-foot">
+              <span>#0047</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=rwanda-lotto" class="market-card" data-code="rwanda-lotto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">RWANDA LOTTO</div>
+            <div class="market-num">7865</div>
+            <div class="market-foot">
+              <span>#0048</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=tokyo" class="market-card" data-code="tokyo">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TOKYO</div>
+            <div class="market-num">7356</div>
+            <div class="market-foot">
+              <span>#0049</span>
+              <span>jam 10:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=liverpool-lottery" class="market-card" data-code="liverpool-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">LIVERPOOL LOTTERY</div>
+            <div class="market-num">7864</div>
+            <div class="market-foot">
+              <span>#0050</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=osaka-lottery" class="market-card" data-code="osaka-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">OSAKA LOTTERY+</div>
+            <div class="market-num">3679</div>
+            <div class="market-foot">
+              <span>#0051</span>
+              <span>jam 11:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=morocco-quatro-03:00" class="market-card" data-code="morocco-quatro-03:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MOROCCO QUATRO 03:00 WIB</div>
+            <div class="market-num">4500</div>
+            <div class="market-foot">
+              <span>#0052</span>
+              <span>jam 03:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=morocco-quatro-00:00" class="market-card" data-code="morocco-quatro-00:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MOROCCO QUATRO 00:00 WIB</div>
+            <div class="market-num">3276</div>
+            <div class="market-foot">
+              <span>#0053</span>
+              <span>jam 00:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=morocco-quatro-21:00" class="market-card" data-code="morocco-quatro-21:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MOROCCO QUATRO 21:00 WIB</div>
+            <div class="market-num">0487</div>
+            <div class="market-foot">
+              <span>#0054</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=morocco-quatro-18:00" class="market-card" data-code="morocco-quatro-18:00">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MOROCCO QUATRO 18:00 WIB</div>
+            <div class="market-num">2478</div>
+            <div class="market-foot">
+              <span>#0055</span>
+              <span>jam 18:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=berlin-pools" class="market-card" data-code="berlin-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BERLIN POOLS</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0056</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=germany-plus5" class="market-card" data-code="germany-plus5">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">GERMANY PLUS5+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0057</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=perdana-4d" class="market-card" data-code="perdana-4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">PERDANA 4D</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0058</span>
+              <span>jam 19:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=batavia" class="market-card" data-code="batavia">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BATAVIA</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0059</span>
+              <span>jam 17:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=bhutan-toto" class="market-card" data-code="bhutan-toto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BHUTAN TOTO+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0060</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=malibucitypools" class="market-card" data-code="malibucitypools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MALIBUCITYPOOLS+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0061</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=malibu4d" class="market-card" data-code="malibu4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MALIBU4D</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0062</span>
+              <span>jam 13:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=brazil" class="market-card" data-code="brazil">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BRAZIL+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0063</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=mancity4d" class="market-card" data-code="mancity4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MANCITY4D+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0064</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=rome-lottery" class="market-card" data-code="rome-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ROME LOTTERY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0065</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=winchester-lottery" class="market-card" data-code="winchester-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">WINCHESTER LOTTERY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0066</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=mancitypools" class="market-card" data-code="mancitypools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MANCITYPOOLS+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0067</span>
+              <span>jam 20:30</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=barcelona" class="market-card" data-code="barcelona">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BARCELONA+</div>
+            <div class="market-num">5489</div>
+            <div class="market-foot">
+              <span>#0068</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=grab-pools" class="market-card" data-code="grab-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">GRAB POOLS+</div>
+            <div class="market-num">0976</div>
+            <div class="market-foot">
+              <span>#0069</span>
+              <span>jam 14:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=sao-paulo" class="market-card" data-code="sao-paulo">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SAO PAULO+</div>
+            <div class="market-num">4239</div>
+            <div class="market-foot">
+              <span>#0070</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=emirates-day" class="market-card" data-code="emirates-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">EMIRATES DAY+</div>
+            <div class="market-num">9876</div>
+            <div class="market-foot">
+              <span>#0071</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=florence-lottery" class="market-card" data-code="florence-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">FLORENCE LOTTERY+</div>
+            <div class="market-num">8538</div>
+            <div class="market-foot">
+              <span>#0072</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=washington-dc-evening" class="market-card" data-code="washington-dc-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">WASHINGTON DC EVENING+</div>
+            <div class="market-num">8904</div>
+            <div class="market-foot">
+              <span>#0073</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=washington-dc-midday" class="market-card" data-code="washington-dc-midday">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">WASHINGTON DC MIDDAY+</div>
+            <div class="market-num">0646</div>
+            <div class="market-foot">
+              <span>#0074</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=washington" class="market-card" data-code="washington">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">WASHINGTON+</div>
+            <div class="market-num">7657</div>
+            <div class="market-foot">
+              <span>#0075</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=arkansas-evening" class="market-card" data-code="arkansas-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ARKANSAS EVENING+</div>
+            <div class="market-num">8729</div>
+            <div class="market-foot">
+              <span>#0076</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=arkansas-day" class="market-card" data-code="arkansas-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ARKANSAS DAY+</div>
+            <div class="market-num">8769</div>
+            <div class="market-foot">
+              <span>#0077</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=oregon-0900" class="market-card" data-code="oregon-0900">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">OREGON 09:00+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0078</span>
+              <span>jam 09:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=oregon-1600" class="market-card" data-code="oregon-1600">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">OREGON 16:00+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0079</span>
+              <span>jam 16:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=oregon-1300" class="market-card" data-code="oregon-1300">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">OREGON 13:00+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0080</span>
+              <span>jam 13:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=oregon-1200" class="market-card" data-code="oregon-1200">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">OREGON 12:00+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0081</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=indiana-evening" class="market-card" data-code="indiana-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">INDIANA EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0082</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=indiana-day" class="market-card" data-code="indiana-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">INDIANA DAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0083</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=indiana" class="market-card" data-code="indiana">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">INDIANA+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0084</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=new-jersey-evening" class="market-card" data-code="new-jersey-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NEW JERSEY EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0085</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=new-jersey-midday" class="market-card" data-code="new-jersey-midday">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NEW JERSEY MIDDAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0086</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=kentucky-evening" class="market-card" data-code="kentucky-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">KENTUCKY EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0087</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=kentucky" class="market-card" data-code="kentucky">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">KENTUCKY+</div>
+            <div class="market-num">4978</div>
+            <div class="market-foot">
+              <span>#0088</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=kentucky-midday" class="market-card" data-code="kentucky-midday">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">KENTUCKY MIDDAY+</div>
+            <div class="market-num">6753</div>
+            <div class="market-foot">
+              <span>#0089</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=michigan-midday" class="market-card" data-code="michigan-midday">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MICHIGAN MIDDAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0090</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=michigan-evening" class="market-card" data-code="michigan-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">MICHIGAN EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0091</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=florida" class="market-card" data-code="florida">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">FLORIDA+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0092</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=florida-evening" class="market-card" data-code="florida-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">FLORIDA EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0093</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=florida-day" class="market-card" data-code="florida-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">FLORIDA DAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0094</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=texas-evening" class="market-card" data-code="texas-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TEXAS EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0095</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=texas-morning" class="market-card" data-code="texas-morning">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TEXAS MORNING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0096</span>
+              <span>jam 08:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=texas-night" class="market-card" data-code="texas-night">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TEXAS NIGHT+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0097</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=pennsylvania-evening" class="market-card" data-code="pennsylvania-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">PENNSYLVANIA EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0098</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=pennsylvania-day" class="market-card" data-code="pennsylvania-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">PENNSYLVANIA DAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0099</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=virginia" class="market-card" data-code="virginia">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">VIRGINIA+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0100</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=virginia-night" class="market-card" data-code="virginia-night">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">VIRGINIA NIGHT+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0101</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=virginia-day" class="market-card" data-code="virginia-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">VIRGINIA DAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0102</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=atlantic-morning" class="market-card" data-code="atlantic-morning">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ATLANTIC MORNING</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0103</span>
+              <span>jam 08:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=atlantic-night" class="market-card" data-code="atlantic-night">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ATLANTIC NIGHT+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0104</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=atlantic-day" class="market-card" data-code="atlantic-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ATLANTIC DAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0105</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=atlanta-toto" class="market-card" data-code="atlanta-toto">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ATLANTA TOTO+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0106</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=boston-night" class="market-card" data-code="boston-night">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BOSTON NIGHT+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0107</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=tennessee-day" class="market-card" data-code="tennessee-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TENNESSEE DAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0108</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=tennessee-evening" class="market-card" data-code="tennessee-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TENNESSEE EVENING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0109</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=tennessee-morning" class="market-card" data-code="tennessee-morning">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">TENNESSEE MORNING+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0110</span>
+              <span>jam 08:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=portland-pools" class="market-card" data-code="portland-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">PORTLAND POOLS+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0111</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=polandia-lottery" class="market-card" data-code="polandia-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">POLANDIA LOTTERY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0112</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=canada" class="market-card" data-code="canada">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">CANADA+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0113</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=granada-pools" class="market-card" data-code="granada-pools">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">GRANADA POOLS+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0114</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=orlando" class="market-card" data-code="orlando">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">ORLANDO+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0115</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=nevada" class="market-card" data-code="nevada">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NEVADA+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0116</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=usa-night" class="market-card" data-code="usa-night">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">USA NIGHT+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0117</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=newyork-midday" class="market-card" data-code="newyork-midday">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NEWYORK MIDDAY+</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0118</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=newyork-4d" class="market-card" data-code="newyork-4d">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NEWYORK 4D+</div>
+            <div class="market-num">9093</div>
+            <div class="market-foot">
+              <span>#0119</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=wiscosin" class="market-card" data-code="wiscosin">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">WISCOSIN+</div>
+            <div class="market-num">8763</div>
+            <div class="market-foot">
+              <span>#8763</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+ \\\\       
+           <a href="result.html?code=SERAWAK" class="market-card" data-code="SERAWAK">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SERAWAK</div>
+            <div class="market-num">4821</div>
+            <div class="market-foot">
+              <span>#0121</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+
+           <a href="result.html?code=SERAWAK 4D" class="market-card" data-code="SERAWAK 4D">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SERAWAK 4D</div>
+            <div class="market-num"> 9316</div>
+            <div class="market-foot">
+              <span>#0121</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+
+             <a href="result.html?code=SANDAKAN 4D" class="market-card" data-code="SANDAKAN 4D">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SANDAKAN 4D</div>
+            <div class="market-num">0562</div>
+            <div class="market-foot">
+              <span>#0121</span>
+              <span>jam 22:00</span>
+            </div>
+          </a>
+
+             <a href="result.html?code=SABAH 4D" class="market-card" data-code="SABAH 4D">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SABAH 4D</div>
+            <div class="market-num">9455</div>
+            <div class="market-foot">
+              <span>#0121</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+
+
+                <a href="result.html?code=SABAH 88" class="market-card" data-code="SABAH 88>
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">SABAH 88</div>
+            <div class="market-num">0000</div>
+            <div class="market-foot">
+              <span>#0121</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+
+
+          <a href="result.html?code=bulls-eye" class="market-card" data-code="bulls-eye">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">BULLS EYE+</div>
+            <div class="market-num">0577</div>
+            <div class="market-foot">
+              <span>#0121</span>
+              <span>jam 15:00</span>
+            </div>
+          </a>
+
+          <a href="result.html?code=venice-lottery" class="market-card" data-code="venice-lottery">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">VENICE LOTTERY+</div>
+            <div class="market-num">7554</div>
+            <div class="market-foot">
+              <span>#0122</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=north-carolina-day" class="market-card" data-code="north-carolina-day">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NORTH CAROLINA DAY+</div>
+            <div class="market-num">0550/div>
+            <div class="market-foot">
+              <span>#0123</span>
+              <span>jam 12:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=north-carolina" class="market-card" data-code="north-carolina">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NORTH CAROLINA+</div>
+            <div class="market-num">9786</div>
+            <div class="market-foot">
+              <span>#0124</span>
+              <span>jam 20:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=north-carolina-evening" class="market-card" data-code="north-carolina-evening">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">NORTH CAROLINA EVENING+</div>
+            <div class="market-num">5756</div>
+            <div class="market-foot">
+              <span>#0125</span>
+              <span>jam 19:00</span>
+            </div>
+          </a>
+        
+          <a href="result.html?code=california" class="market-card" data-code="california">
+            <span class="badge-corner buka">BUKA</span>
+            <div class="market-name">CALIFORNIA+</div>
+            <div class="market-num">9896</div>
+            <div class="market-foot">
+              <span>#0126</span>
+              <span>jam 21:00</span>
+            </div>
+          </a>
+        
+      </div>
+    </div>
+  </div>
 
     <div class="footer">
       Central Panel · Live Draw Togel · v2.0
     </div>
-
   </main>
 
-<script>
-  // =====================================================
-  //  DATA PASARAN — silakan tambah/edit
-  // =====================================================
-  // ====== KONFIG SITUS ANDA ======
-  const SITUS_URL = 'https://situsanda.com'; // ← GANTI dengan URL situs Anda
-  const ADMIN_PASSWORD = 'admin123';          // ← GANTI password admin Anda
+<script src="js/main.js"></script>
 
-  // ====== DATA 19 PASARAN ======
-  // folder = nama folder di images/ untuk taruh gambar banner
-  // banner1/banner2 otomatis dibuat dari folder
-  const defaultPasaran = [
-    { name: 'MAGNUM CAMBODIA',   code: 'magnum-cambodia',   folder: 'MAGNUM CAMBODIA',   result: '1234', date: '30-04-2026', periode: '0001', status: 'open',  jam: '11:55' },
-    { name: 'TOTOMACAU',         code: 'totomacau',         folder: 'TOTOMACAU',         result: '5678', date: '30-04-2026', periode: '0002', status: 'live',  jam: '22:00' },
-    { name: 'SYDNEYPOOLS',       code: 'sydneypools',       folder: 'SYDNEYPOOLS',       result: '9012', date: '30-04-2026', periode: '0003', status: 'tutup', jam: '13:50' },
-    { name: 'CHINA',             code: 'china',             folder: 'CHINA',             result: '3456', date: '30-04-2026', periode: '0004', status: 'open',  jam: '16:00' },
-    { name: 'SINGAPORE',         code: 'singapore',         folder: 'SINGAPORE',         result: '7890', date: '30-04-2026', periode: '0005', status: 'live',  jam: '17:45' },
-    { name: 'HONGKONG',          code: 'hongkong',          folder: 'HONGKONG',          result: '2345', date: '30-04-2026', periode: '0006', status: 'open',  jam: '23:00' },
-    { name: 'MACAU 4D',          code: 'macau-4d',          folder: 'MACAU 4D',          result: '6789', date: '30-04-2026', periode: '0007', status: 'open',  jam: '22:00' },
-    { name: 'KINGKONG POOLS',    code: 'kingkong-pools',    folder: 'KINGKONG POOLS',    result: '1023', date: '30-04-2026', periode: '0008', status: 'tutup', jam: '19:30' },
-    { name: 'DAMACAI',           code: 'damacai',           folder: 'DAMACAI',           result: '4567', date: '30-04-2026', periode: '0009', status: 'open',  jam: '19:30' },
-    { name: 'GRAND DRAGON 4D',   code: 'grand-dragon-4d',   folder: 'GRAND DRAGON 4D',   result: '8901', date: '30-04-2026', periode: '0010', status: 'open',  jam: '19:30' },
-    { name: 'PCSO',              code: 'pcso',              folder: 'PCSO',              result: '2456', date: '30-04-2026', periode: '0011', status: 'tutup', jam: '21:00' },
-    { name: 'SAIGON',            code: 'saigon',            folder: 'SAIGON',            result: '7813', date: '30-04-2026', periode: '0012', status: 'live',  jam: '18:00' },
-    { name: 'JAKARTA POOLS',     code: 'jakarta-pools',     folder: 'JAKARTA POOLS',     result: '3692', date: '30-04-2026', periode: '0013', status: 'open',  jam: '20:30' },
-    { name: 'TOTO WUHAN 10:00',  code: 'toto-wuhan',        folder: 'TOTO WUHAN',        result: '5108', date: '30-04-2026', periode: '0014', status: 'tutup', jam: '10:00' },
-    { name: 'SHENZHEN LOTTERY',  code: 'shenzhen-lottery',  folder: 'SHENZHEN LOTTERY',  result: '8473', date: '30-04-2026', periode: '0015', status: 'open',  jam: '13:00' },
-    { name: 'MANILA POOLS',      code: 'manila-pools',      folder: 'MANILA POOLS',      result: '6195', date: '30-04-2026', periode: '0016', status: 'tutup', jam: '15:30' },
-    { name: 'CHIANGMAI LOTTERY', code: 'chiangmai-lottery', folder: 'CHIANGMAI LOTTERY', result: '4827', date: '30-04-2026', periode: '0017', status: 'open',  jam: '14:00' },
-    { name: 'SHANGHAI POOLS',    code: 'shanghai-pools',    folder: 'SHANGHAI POOLS',    result: '9034', date: '30-04-2026', periode: '0018', status: 'open',  jam: '12:30' },
-    { name: 'PATTAYA LOTTERY',   code: 'pattaya-lottery',   folder: 'PATTAYA LOTTERY',   result: '1456', date: '30-04-2026', periode: '0019', status: 'tutup', jam: '13:30' }
-  ];
 
-  // Load dari localStorage kalau admin pernah edit, kalau tidak pakai default
-  function loadPasaran() {
-    try {
-      const saved = localStorage.getItem('togel_pasaran');
-      if (saved) {
-        const data = JSON.parse(saved);
-        if (Array.isArray(data) && data.length) return data;
-      }
-    } catch (e) {}
-    return JSON.parse(JSON.stringify(d
+<div id="float-chat" class="float-chat">
+    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener" class="fc-wa" title="WhatsApp">WA</a>
+    <a href="https://facebook.com/situsanda" target="_blank" rel="noopener" class="fc-fb" title="Facebook">FB</a>
+    <a href="https://situsanda.com/chat" target="_blank" rel="noopener" class="fc-cs" title="Chat Admin">Chat<br>Admin</a>
+  </div></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
